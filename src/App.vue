@@ -1,28 +1,50 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <HeaderView/> -->
+    <router-view/>
+    <!-- <SignUpload></SignUpload> -->
+    <!-- <FormSignup></FormSignup> -->
+    <!-- <PreviewForm></PreviewForm> -->
+    <!-- <LoginModal></LoginModal> -->
+    <!-- <SuccessModal></SuccessModal> -->
+    <!-- <OtpModal></OtpModal> -->
+    <!-- <FooterView/> -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+// import FooterView from './components/FooterView.vue';
+// import HeaderView from './components/HeaderView.vue';
+// import FormSignup from './components/FormSignup.vue';
+// import SignUpload from './components/SignUpload.vue';
+// import PreviewForm from './components/PreviewForm.vue';
+// import LoginModal from './components/LoginModal.vue';
+// import OtpModal from './components/OtpModal.vue';
+// import SuccessModal from './components/SuccessModal.vue';
+
+
+
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  name : "App",
+  components:{
+    //  HeaderView,
+    //  FooterView,
+    //  FormSignup,
+    //  SignUpload,
+    // PreviewForm,
+    // LoginModal,
+    // OtpModal,
+    // SuccessModal,
+
+     
   }
+  
+
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
