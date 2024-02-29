@@ -8,11 +8,11 @@
           <p>OTP code has been sent to {{ localContactNumber }}  Enter the code below to continue.</p>
 
           <div class="otp-inputs">
-            <b-input ref="otpInput0" v-model="otpDigits[0]" maxlength="1" type="number" @input="moveToNext(0)"></b-input>
-            <b-input ref="otpInput1" v-model="otpDigits[1]" maxlength="1" type="number" @input="moveToNext(1)"></b-input>
-            <b-input ref="otpInput2" v-model="otpDigits[2]" maxlength="1" type="number" @input="moveToNext(2)"></b-input>
-            <b-input ref="otpInput3" v-model="otpDigits[3]" maxlength="1" type="number" @input="moveToNext(3)"></b-input>
-            <b-input ref="otpInput4" v-model="otpDigits[4]" maxlength="1" type="number" @input="moveToNext(4)"></b-input>
+            <input class="otp-digits" ref="otpInput0" v-model="otpDigits[0]" maxlength="1" type="number" @input="moveToNext(0)" @keydown="moveToPrevious($event, 0)">
+            <input class="otp-digits" ref="otpInput1" v-model="otpDigits[1]" maxlength="1" type="number" @input="moveToNext(1)" @keydown="moveToPrevious($event, 1)">
+            <input class="otp-digits" ref="otpInput2" v-model="otpDigits[2]" maxlength="1" type="number" @input="moveToNext(2)" @keydown="moveToPrevious($event, 2)">
+            <input class="otp-digits" ref="otpInput3" v-model="otpDigits[3]" maxlength="1" type="number" @input="moveToNext(3)" @keydown="moveToPrevious($event, 3)">
+            <input class="otp-digits" ref="otpInput4" v-model="otpDigits[4]" maxlength="1" type="number" @input="moveToNext(4)" @keydown="moveToPrevious($event, 4)">
           </div>
            <span v-if="showOTPAlert" class="otp-error">Please fill all OTP fields.</span>
           
@@ -35,7 +35,7 @@
 <script>
 import FormSignup from './FormSignup.vue';
 import axios from 'axios';
-// import contactNumber from './LoginModal.vue'
+
 
 export default {
 
@@ -63,13 +63,11 @@ export default {
   },
   methods: {
     verify(){
-
-     // console.log('vidushika');
       if (this.otpDigits.some(digit => !digit.trim())) {
-        this.showOTPAlert = true; // Set showOTPAlert to true to display the alert message
+        this.showOTPAlert = true; 
         return;
       }
-       // console.log('moda vidushika');
+       
       
       const otpCode = this.otpDigits.join('');
       axios.post(
@@ -78,8 +76,6 @@ export default {
 
       ).then(response => {
        console.log('Response:', response) 
-        // console.log('Response code:', response.data.status_code );
-
         
           if (response.data.status_code == 200) {
           this.$buefy.toast.open({
@@ -87,8 +83,6 @@ export default {
            type: 'is-success'
           });
 
-
-        // console.log('piccu')
         this.$router.push('/signup');
       } 
       else {
@@ -123,6 +117,13 @@ export default {
         this.$refs[`otpInput${index + 1}`].focus();
       }
     },
+
+     moveToPrevious(event, index) {
+      if (event.key === 'Backspace' && !this.otpDigits[index] && index > 0) {
+        this.$refs[`otpInput${index - 1}`].focus();
+      }
+    },
+
     formatTime(time) {
       const minutes = Math.floor(time / 60);
       const seconds = time % 60;
@@ -146,8 +147,7 @@ export default {
     )
     .then(response => {
         console.log('Response:', response.data);
-        // Handle the response here, such as displaying a success message or updating UI
-        // Example:
+        
         if (response.data.status_code === 200) {
             this.$buefy.toast.open({
                 message: 'OTP successfully resent!',
@@ -165,12 +165,20 @@ export default {
     })
     .catch(error => {
         console.error('Error resending OTP:', error);
-        // Handle the error here, such as displaying an error message or updating UI
+        
     });
 }
 
   },
   mounted() {
+    const inputs = document.querySelectorAll('.otp-digits');
+    inputs.forEach(input => {
+      input.addEventListener('keydown', function(event) {
+        if (this.value.length === 1 && event.key !== 'Backspace') {
+          event.preventDefault();
+        }
+      });
+    });
     this.resendOTP();
     this.localContactNumber = this.$route.params.contact;
     console.log("contact no :",this.localContactNumber)
@@ -180,6 +188,20 @@ export default {
 </script>
 
 <style scoped>
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+
 .form-container {
   width: 400px;
   height: 400px;
@@ -229,12 +251,15 @@ form {
   margin-left: 15px;
   margin-right: 15px;
   text-align: center;
+  
 }
 
-.b-input {
-  width: 25px;
+.otp-digits {
+  width: 40px;
+  height: 40px;
   margin: 0 5px;
   justify-content: center;
+  text-align: center;
 }
 
 span{
@@ -242,4 +267,5 @@ span{
   color: red;
   margin-left: 20px;
 }
+
 </style>

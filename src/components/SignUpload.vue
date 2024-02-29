@@ -59,60 +59,33 @@ export default {
   methods: {
 
     captureImageFront(front) {
-      const comp = this
+     
       console.log('front', front)
-      comp.base64NICFrontImage = front
-      comp.myStore.base64NICFrontImage = front;
-      comp.myStore.updateImageUrl('comp.base64NICFrontImage', front);
+      this.base64NICFrontImage = front
+      this.myStore.base64NICFrontImage =  base64NICFrontImage;
+      
     },
 
     captureImageRear(rear) {
-      const comp = this
-      comp.base64NICBackImage = rear;
-      comp.myStore.base64NICBackImage = rear;
-      comp.myStore.updateImageUrl('comp.base64NICBackImage', rear);
+      
+      this.base64NICBackImage = rear;
+      this.myStore.base64NICBackImage = base64NICBackImage;
+      
     },
 
     captureImageSelfie(selfie) {
-      const comp = this
-      comp.base64SelfieImage = selfie;
-      comp.myStore.base64SelfieImage = selfie;
-      comp.myStore.updateImageUrl('comp.base64SelfieImage', selfie);
+      
+      this.base64SelfieImage = selfie;
+      this.myStore.base64SelfieImage = base64SelfieImage;
+      
     },
 
-    // captureImageFront(front){
-    //   console.log("helloooo")
-    //   console.log("captured image front ", front)
-    //   this.imageUrl = front
-    //   // this.myStore.base64NICFrontImage = front
-    //   this.base64NICFrontImage=front
-    //   console.log("front image",this.base64NICFrontImage)
-
-    // }, 
-
-    // captureImageRear(rear){
-    //   console.log("captured image rear", rear)
-    //   this.base64NICBackImage = rear
-    //   // this.myStore.base64NICBackImage = rear
-
-    // },
-
-    //  captureImageSelfie(selfie){
-    //   console.log("captured image selfie", selfie)
-    //   this.base64SelfieImage = selfie
-    //   // this.myStore.base64SelfieImage = selfie
-
-    // },
-
-    // handleEvent(type, imageUrl) {
-    //   console.log('Received event with type:', type, imageUrl);
-    //   this.myStore.updateImageUrl(type, imageUrl);
-    // },
+    
     next() {
-      const comp = this
+      // const comp = this
       console.log("next");
 
-      const imageUploaders = [comp.base64NICFrontImage, comp.base64NICBackImage, comp.base64SelfieImage];
+      const imageUploaders = [this.base64NICFrontImage, this.base64NICBackImage, this.base64SelfieImage];
       let allFieldsFilled = true;
       for (const uploader of imageUploaders) {
         if (uploader.imageUrl !== "") {
@@ -125,34 +98,34 @@ export default {
       // Define your image upload data
 let imageUpload = {
   kycForms: "string",
-  base64NICFrontImage: comp.base64NICFrontImage,
-  base64NICBackImage: comp.base64NICBackImage,
-  base64SelfieImage: comp.base64SelfieImage,
+  base64NICFrontImage: this.base64NICFrontImage,
+  base64NICBackImage: this.base64NICBackImage,
+  base64SelfieImage: this.base64SelfieImage,
   
 };
 
 // Call the api_request function from NetworkManager
 NetworkManager.api_request('/FileUpload/UploadImage', imageUpload)
 
-      comp.$buefy.toast.open({
+      this.$buefy.toast.open({
           message: 'Data saved successfully!',
            type: 'is-success'
           });
 	
-        comp.myStore.updateImageUrl(comp.base64NICFrontImage);
-        console.log('img_front',comp.base64NICFrontImage)
-        comp.myStore.updateImageUrl(comp.base64NICBackImage); 
-        console.log('img_back',comp.base64NICBackImage)
-        comp.myStore.updateImageUrl(comp.base64SelfieImage); 
-        console.log('img_selfie',comp.base64NICSelfieImage)
-        comp.$router.push('/preview');
+        this.myStore.base64NICFrontImage = this.base64NICFrontImage
+        console.log('img_front',this.base64NICFrontImage)
+        this.myStore.base64NICBackImage = this.base64NICBackImage; 
+        console.log('img_back',this.base64NICBackImage)
+        this.myStore.base64SelfieImage = this.base64SelfieImage; 
+        console.log('img_selfie',this.base64NICSelfieImage)
+        this.$router.push('/preview');
       } else {
         //alert('Please fill all fields of the image uploader.');
       }
     },
 
     goBack() {
-      comp.$router.go(-1);
+      this.$router.go(-1);
     },
   },
   components: {

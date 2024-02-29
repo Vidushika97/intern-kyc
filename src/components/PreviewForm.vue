@@ -96,7 +96,6 @@
   
 
 <script>
-// import ImageUploader from './ImageUploader.vue';
 import FooterView from './FooterView.vue';
 import HeaderView from './HeaderView.vue';
 import {useMyStore} from '../storage/myStore.js';
@@ -120,13 +119,13 @@ export default {
       inputEmail:"",}
   },
 
-     components:{
-    //  ImageUploader,
+   components:{
+    
      HeaderView,
      FooterView,
      
 },
-     methods: {
+   methods: {
     submit() {
       console.log('test', this.imageUrlFront)
       this.$router.push('/success');
@@ -148,14 +147,9 @@ export default {
     this.imageUrlRear = this.myStore.base64NICBackImage; 
     this.imageUrlSelfie = this.myStore.base64SelfieImage; 
    
-
-    // console.log("dd",this.number )
   }
 }
- 
 
-
- 
 </script>
 
 <style scoped>

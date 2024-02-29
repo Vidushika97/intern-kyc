@@ -4,8 +4,6 @@ import FormSignup from './components/FormSignup.vue'
 import SignUpload from './components/SignUpload.vue'
 import PreviewForm from './components/PreviewForm.vue'
 import SuccessModal from './components/SuccessModal.vue'
-// import HeaderView from './components/HeaderView.vue'
-// import FooterView from './components/FooterView.vue'
 import ImageUploader from './components/ImageUploader.vue'
 
 export default[
@@ -15,7 +13,5 @@ export default[
     {path:'/upload',component:SignUpload},
     {path:'/preview',component:PreviewForm},
     {path:'/success',component:SuccessModal},
-    // {path:'/footer',component:FooterView},
-    // {path:'/header',component:HeaderView},
     {path:'/imageupload',component:ImageUploader},
 ]

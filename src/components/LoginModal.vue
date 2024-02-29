@@ -12,15 +12,14 @@
         
           <b-field is-size-1-mobile id="field" label="Contact Number*">
             <ValidationProvider name="selectedCountryCode" rules="required" v-slot="{ errors }"> 
-              <b-select v-model="selectedCountryCode" placeholder="Select Country Code">
+              <select v-model="selectedCountryCode" placeholder="+94">
                 <option value="+94">+94 (LK)</option>
-              </b-select>
+              </select>
               <span>{{errors[0]}}</span>
             </ValidationProvider>
 
             <ValidationProvider name="mobileNumber" rules="required|min:9|max:9" v-slot="{ errors }"> 
-              <b-input v-model="mobileNumber" type="text" placeholder="Enter your mobile no."></b-input>
-              <!-- <b-input v-model="mobileNumber" type="number" placeholder="Enter your mobile no."></b-input> -->
+              <input v-model="mobileNumber" type="number" placeholder="Enter your mobile number">
               <span>{{errors[0]}}</span>
             </ValidationProvider>
           </b-field>
@@ -69,7 +68,7 @@ export default {
     onSubmit() {
       const contactNumber = this.selectedCountryCode + this.mobileNumber
       
-       NetworkManager.api_request('/ContactNumber/ContactNumber', {contact_number: contactNumber})
+      NetworkManager.api_request('/ContactNumber/ContactNumber', {contact_number: contactNumber})
       // console.log("ygsyu",contactNumber)
       // axios.post(
       //  'https://localhost:7232/api/ContactNumber/ContactNumber',
@@ -81,7 +80,7 @@ export default {
           message: 'OTP is successfully generated!',
            type: 'is-success'
           });
-      this.myStore.updateMobileNumber(contactNumber);    
+      this.myStore.mobile_number = contactNumber;    
       this.$router.push('/otp/'+contactNumber);
     },
 
@@ -104,12 +103,37 @@ export default {
 </script>
 
 <style scoped>
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+input[type="number"] {
+  width: 240px; 
+  height: 40px; 
+}
+
+select {
+  width: 80px; 
+  height: 40px; 
+}
+
+
+
 .form-container {
   width: 400px;
   height: 400px;
   padding:5px;
-  margin-left: auto; /* Center horizontally */
-  margin-right: auto; /* Center horizontally */
+  margin-left: auto; 
+  margin-right: auto; 
   background-color: white;
 }
 
@@ -125,6 +149,7 @@ h6{
 
 p{
   text-align:center;
+  color: black; 
 }
 
 form{
@@ -149,6 +174,7 @@ form{
 #field{
   margin-left: 30px;
   margin-top:50px;
+  justify-content: space-around;
 }
 
 span {

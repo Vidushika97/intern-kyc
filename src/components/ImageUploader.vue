@@ -6,7 +6,6 @@
       <p>or</p>
     
       <b-button id="capture-button" rounded @click="captureImage" >Capture</b-button>
-      <!-- <button @click="captureImage" id="capture-button">Capture Image</button> -->
     </div>
   </div>
 </template>

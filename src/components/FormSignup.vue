@@ -1,188 +1,165 @@
+
 <template>
   <div>
     <HeaderView />
     <div>
       <h1>KYC Form</h1>
-      <p>Please enter your valid Name & email address to using all of our</p>
-      <p>feature</p>
-      <div class="form-container"> 
-        <form @submit.prevent="continuev">
-          <div class="columns is-8 is-mobile">
-            <div class="column is-half">
-              <b-field label="Title">
-                <b-select v-model="selectTitle" placeholder="Select One" required>
-                  <option value="mr">Mr.</option>
-                  <option value="ms">Ms.</option>
-                </b-select>
-              </b-field>
+      <p>Please enter your valid Name & email address to use all of our features.</p>
+       <ValidationObserver v-slot="{ handleSubmit }">
+           
+        <div class="form-container"> 
+         <form @submit.prevent="handleSubmit(onSubmit)">
+            <div class="columns is-8 is-mobile">
+              <div class="column is-half">
+                <b-field label="Title">
+                  <b-select v-model="myStore.title" placeholder="Select One">
+                    <option value="mr">Mr.</option>
+                    <option value="ms">Ms.</option>
+                  </b-select>
+                </b-field>
+              </div>
+              <div class="column is-half">
+                <b-field label="Full Name">
+                  <ValidationProvider name="Full Name" rules="required|alpha_spaces" v-slot="{ errors }">
+                    <b-input v-model="myStore.full_name"></b-input>
+                    <span>{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </b-field>
+              </div>
             </div>
-            <div class="column is-half">
-              <b-field label="Full Name">
-                <b-input v-model="fullName" required>
-                  <span v-if="isFullNameEmpty" class="error-message">Full name is required</span>
-                  <span v-else-if="containsNumbers" class="error-message">Only letters are allowed</span>
-                </b-input>
-              </b-field>
+            <div class="columns is-8 is-mobile">
+              <div class="column is-half">
+                <b-field label="Mobile Number">
+                  <ValidationProvider name="Mobile Number" rules="required" v-slot="{ errors }">
+                    <b-input v-model="myStore.mobile_number" type="text" placeholder="+94XXXXXXXXX"></b-input>
+                    <span>{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </b-field>
+              </div>
+              <div class="column is-half">
+                <b-field label="Email">
+                  <ValidationProvider name="Email" rules="required" v-slot="{ errors }">
+                    <b-input v-model="myStore.email" type="email" maxlength="30"></b-input>
+                    <span>{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </b-field>
+              </div>
             </div>
-          </div>
-          <div class="columns is-8 is-mobile">
-            <div class="column is-half">
-              <b-field label="Mobile Number">
-                <b-input v-model="number" type="text" placeholder="+94XXXXXXXXX" required></b-input>
-              </b-field>
+            <div class="columns is-8 is-mobile">
+              <div class="column is-half">
+                <b-field label="NIC Number">
+                  <ValidationProvider name="NIC Number" rules="required" v-slot="{ errors }">
+                    <b-input v-model="myStore.nicNumber"></b-input>
+                    <span>{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </b-field>
+              </div>
+              <div class="column">
+                <b-field label="Nationality">
+                   <ValidationProvider name="Nationality" rules="required" v-slot="{ errors }">
+                    <b-select v-model="myStore.nationality" placeholder="Select One">
+                      <option v-for="option in nationalityOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
+                    </b-select>
+                    <span>{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </b-field>
+              </div>
             </div>
-            <div class="column is-half">
-              <b-field label="Email">
-                <b-input v-model="inputEmail" type="email" maxlength="30" required></b-input>
-              </b-field>
-            </div>
-          </div>
-          <div class="columns is-8 is-mobile">
-            <div class="column is-half">
-              <b-field label="NIC Number">
-                <b-input v-model="NIC" required></b-input>
-              </b-field>
-            </div>
-            <div class="column">
-              <b-field label="Nationality">
-                <b-select v-model="nationality" placeholder="Select One" required>
-                <option v-for="option in nationalityOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-                </b-select>
-              </b-field>
-            </div>
-          </div>
-          <div class="buttons">
-            <b-button id="back" @click="goBack">Back</b-button>
-            <b-button id="continue" @click="continuev" type="is-primary">Let's Continue</b-button>
-            
-          </div>
-        </form>
-      </div>
+            <div class="buttons">
+              <b-button id="back" @click="goBack">Back</b-button>
+             <input type="submit" id="continue" tect="Let's Continue">
+             </div>
+          </form>
+        </div>
+      </ValidationObserver>
     </div>
     <FooterView />
   </div>
 </template>
 
 <script>
+import { extend } from 'vee-validate';
 import FooterView from './FooterView.vue';
 import HeaderView from './HeaderView.vue';
-import {useMyStore} from '../storage/myStore.js';
-// import axios from 'axios';
-import NetworkManager from '../network/NetworkManager.js'; 
+import { useMyStore } from '../storage/myStore.js';
+import NetworkManager from '../network/NetworkManager.js';
+
+// Extend VeeValidate with custom rules
+// extend('required', {
+//   validate(value) {
+//     return {
+//       required: true,
+//       valid: !!value.trim(),
+//     };
+//   },
+//   message: 'This field is required',
+// });
+
+extend('alpha_spaces', value => /^[A-Za-z\s]*$/.test(value) || 'Only alphabetic characters are allowed');
 
 export default {
   name: 'FormSignup',
-  setup(){
-    const myStore = useMyStore()
-    return {myStore}
+  setup() {
+    const myStore = useMyStore();
+    return { myStore };
   },
-
- 
-
-  data() {
+   data() {
     return {
-      fullName: "",
-      number: "",
-      NIC: "",
-      nationality: "",
-      nationalityOptions:[
+      nationalityOptions: [
         { value: 'sinhala', label: 'Sinhala' },
         { value: 'tamil', label: 'Tamil' },
         { value: 'muslim', label: 'Muslim' },
         { value: 'malay', label: 'Malay' },
       ],
-      selectTitle: "",
-      inputEmail: ""
-    }
+    };
   },
-
   components: {
     FooterView,
     HeaderView,
+    
   },
-
-  computed: {
-    isFullNameEmpty() {
-      return !this.fullName.trim();
+   computed: {
+    invalid() {
+      return !this.myStore.full_name || !this.myStore.mobile_number || !this.myStore.email || !this.myStore.email || ! this.myStore.nicNumber || !this.myStore.nationality || !this.myStore.title;
     },
-    containsNumbers() {
-      return !/^[a-zA-Z\s]+$/.test(this.fullName);
-    }
   },
-
   methods: {
-    continuev() {
-      if (!this.isValid()) {
-        return;
-      }
+    onSubmit() {
+      console.log("hit");
+      // this.$refs.observer.validate().then(success => {
+        // if (success) {
+          const kycDetails = {
+            title: this.myStore.title,
+            full_name: this.myStore.full_name,
+            mobile_number: this.myStore.mobile_number,
+            email: this.myStore.email,
+            nicNumber: this.myStore.nicNumber,
+            nationality: this.myStore.nationality,
+          };
 
-      let kycDetails = {
-	
-        title : this.selectTitle,
-        full_name : this.fullName,
-        mobile_number : this.number,
-        email : this.inputEmail,
-        nicNumber: this.NIC,
-        nationality: this.nationality
+          console.log(kycDetails);
 
-      }
-      console.log("Kyc",this.number)
-
-      NetworkManager.api_request('/KYC/RegisterKYCForm', kycDetails)
-      
-	    // axios.post(
-      //   'https://localhost:7232/api/KYC/RegisterKYCForm',
-      //    kycDetails)
-      //  .then(response =>{
-      //   console.log('Response:', response.data);
+          NetworkManager.api_request('/KYC/RegisterKYCForm', kycDetails)
+            .then(response => {
+              console.log('Response:', response.data);
+              this.$buefy.toast.open({
+                message: 'Data saved successfully!',
+                type: 'is-success',
+              });
+              this.$router.push('/upload');
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              // Handle error response
+            });
+        // }
       // });
-
-      this.$buefy.toast.open({
-          message: 'Data saved successfully!',
-           type: 'is-success'
-          });
-
-      this.myStore.updateTitle(this.selectTitle);
-      this.myStore.updateFullName(this.fullName); 
-      this.myStore.updateEmail(this.inputEmail); 
-      this.myStore.updateNIC(this.NIC); 
-      this.myStore.updateNationality(this.nationality);
-      
-      
-      this.$router.push('/upload');
     },
 
     goBack() {
       this.$router.go(-1);
     },
-
-    isValid() {
-      if (!this.fullName || !this.number || !this.NIC || !this.inputEmail) {
-        
-        // alert("All fields are required."); 
-        return false;
-      }
-
-      
-      if (!/^[a-zA-Z\s]+$/.test(this.fullName)) {
-        // alert("Name should only contain letters.");
-        return false;
-      }
-
-      // Mobile number should be in the format +94XXXXXXXXX
-      if (!/^\+94\d{9}$/.test(this.number)) {
-        // alert("Mobile number should be in the format +94XXXXXXXXX.");
-        return false;
-      }
-
-      return true;
-    }
-  
   },
-  mounted(){
-    this.number = this.myStore.mobile_number;
-  }
-
 }
 </script>
 
