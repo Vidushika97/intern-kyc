@@ -67,7 +67,7 @@
             </div>
             <div class="buttons">
               <b-button id="back" @click="goBack">Back</b-button>
-             <input type="submit" id="continue" tect="Let's Continue">
+             <input type="submit" id="continue" tect="Let's Continue" value="Let's Continue">
              </div>
           </form>
         </div>
@@ -215,10 +215,16 @@ width: 90%; /* Ensure the form takes full width of its container */
 
 #continue{
     background-color: #F54D4D;
-    width:40%;
+    width:200px;
+    border-style: none;
+    height:42px;
+    font-size: 15px;
+    color: white;
+    border-radius: 5px;
 }
 
 #back{
+  margin-top: 2px;
   width:20%;
   border-color: black;
   margin-right: 4%;
@@ -231,6 +237,12 @@ width: 90%; /* Ensure the form takes full width of its container */
 }
 #label{
   font-size: 5px;
+}
+
+span {
+  color: red;
+  font-size: 12px;
+  margin-right: 2px;
 }
 
 

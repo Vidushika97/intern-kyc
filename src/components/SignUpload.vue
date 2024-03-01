@@ -44,9 +44,7 @@ export default {
   name: 'SignUpload',
   data() {
     return {
-      base64NICFrontImage: "",
-      base64NICBackImage: "",
-      base64SelfieImage: "",
+     
     };
   },
   setup() {
@@ -54,29 +52,28 @@ export default {
 
     return { myStore };
   },
-   props:
-    ['imageUrl'],
+  
   methods: {
 
     captureImageFront(front) {
      
       console.log('front', front)
-      this.base64NICFrontImage = front
-      this.myStore.base64NICFrontImage =  base64NICFrontImage;
+      
+      this.myStore.base64NICFrontImage =  front;
       
     },
 
     captureImageRear(rear) {
       
-      this.base64NICBackImage = rear;
-      this.myStore.base64NICBackImage = base64NICBackImage;
+      
+      this.myStore.base64NICBackImage = rear;
       
     },
 
     captureImageSelfie(selfie) {
       
-      this.base64SelfieImage = selfie;
-      this.myStore.base64SelfieImage = base64SelfieImage;
+      
+      this.myStore.base64SelfieImage = selfie;
       
     },
 
@@ -85,7 +82,7 @@ export default {
       // const comp = this
       console.log("next");
 
-      const imageUploaders = [this.base64NICFrontImage, this.base64NICBackImage, this.base64SelfieImage];
+      const imageUploaders = [this.myStore.base64NICFrontImage, this.myStore.base64NICBackImage, this.myStore.base64SelfieImage];
       let allFieldsFilled = true;
       for (const uploader of imageUploaders) {
         if (uploader.imageUrl !== "") {
@@ -98,9 +95,9 @@ export default {
       // Define your image upload data
 let imageUpload = {
   kycForms: "string",
-  base64NICFrontImage: this.base64NICFrontImage,
-  base64NICBackImage: this.base64NICBackImage,
-  base64SelfieImage: this.base64SelfieImage,
+  base64NICFrontImage: this.myStore.base64NICFrontImage,
+  base64NICBackImage: this.myStore.base64NICBackImage,
+  base64SelfieImage: this.myStore.base64SelfieImage,
   
 };
 
@@ -112,12 +109,7 @@ NetworkManager.api_request('/FileUpload/UploadImage', imageUpload)
            type: 'is-success'
           });
 	
-        this.myStore.base64NICFrontImage = this.base64NICFrontImage
-        console.log('img_front',this.base64NICFrontImage)
-        this.myStore.base64NICBackImage = this.base64NICBackImage; 
-        console.log('img_back',this.base64NICBackImage)
-        this.myStore.base64SelfieImage = this.base64SelfieImage; 
-        console.log('img_selfie',this.base64NICSelfieImage)
+        
         this.$router.push('/preview');
       } else {
         //alert('Please fill all fields of the image uploader.');
