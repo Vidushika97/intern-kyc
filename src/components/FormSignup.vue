@@ -2,6 +2,13 @@
 <template>
   <div>
     <HeaderView />
+    
+    <div v-if="showOtpModal">
+      <OtpModal :contactNumber="this.myStore.mobile_number"/>
+    </div>
+    <div v-if="showModal">
+      <LoginModal :setOtpModal="setOtpModal"/>
+    </div>
     <div>
       <h1>KYC Form</h1>
       <p>Please enter your valid Name & email address to use all of our features.</p>
@@ -10,15 +17,15 @@
         <div class="form-container"> 
          <form @submit.prevent="handleSubmit(onSubmit)">
             <div class="columns is-8 is-mobile">
-              <div class="column is-half">
+              <div class="column is-one-fifth">
                 <b-field label="Title">
-                  <b-select v-model="myStore.title" placeholder="Select One">
-                    <option value="mr">Mr.</option>
-                    <option value="ms">Ms.</option>
-                  </b-select>
+                  <select  class="title-input"  v-model="myStore.title" placeholder="Select One">
+                    <option class="title-option" value="mr">Mr.</option>
+                    <option  value="ms">Ms.</option>
+                  </select>
                 </b-field>
               </div>
-              <div class="column is-half">
+              <div class="column is-four-fifths">
                 <b-field label="Full Name">
                   <ValidationProvider name="Full Name" rules="required|alpha_spaces" v-slot="{ errors }">
                     <b-input v-model="myStore.full_name"></b-input>
@@ -57,9 +64,9 @@
               <div class="column">
                 <b-field label="Nationality">
                    <ValidationProvider name="Nationality" rules="required" v-slot="{ errors }">
-                    <b-select v-model="myStore.nationality" placeholder="Select One">
-                      <option v-for="option in nationalityOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-                    </b-select>
+                    <select class="nationality-input" v-model="myStore.nationality" placeholder="Select One">
+                      <option class="nationality-options" v-for="option in nationalityOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
+                    </select>
                     <span>{{ errors[0] }}</span>
                   </ValidationProvider>
                 </b-field>
@@ -83,7 +90,8 @@ import FooterView from './FooterView.vue';
 import HeaderView from './HeaderView.vue';
 import { useMyStore } from '../storage/myStore.js';
 import NetworkManager from '../network/NetworkManager.js';
-
+import LoginModal from './LoginModal.vue';
+import OtpModal from './OtpModal.vue';
 // Extend VeeValidate with custom rules
 // extend('required', {
 //   validate(value) {
@@ -111,11 +119,16 @@ export default {
         { value: 'muslim', label: 'Muslim' },
         { value: 'malay', label: 'Malay' },
       ],
-    };
+      showModal:true,
+      showOtpModal:false,
+      };
+      
   },
   components: {
     FooterView,
     HeaderView,
+    LoginModal,
+    OtpModal,
     
   },
    computed: {
@@ -139,23 +152,21 @@ export default {
 
           console.log(kycDetails);
 
-          NetworkManager.api_request('/KYC/RegisterKYCForm', kycDetails)
+          NetworkManager.api_request('/KYC/RegisterKYCForm', kycDetails,this)
             .then(response => {
               console.log('Response:', response.data);
-              this.$buefy.toast.open({
-                message: 'Data saved successfully!',
-                type: 'is-success',
-              });
+            
               this.$router.push('/upload');
             })
-            .catch(error => {
-              console.error('Error:', error);
-              // Handle error response
-            });
+            
         // }
       // });
     },
+    setOtpModal(){
+      this.showOtpModal=true;
+    },
 
+    
     goBack() {
       this.$router.go(-1);
     },
@@ -201,6 +212,34 @@ word-spacing: 0.1em;
   width:75%;
   margin-bottom:5%;
   
+}
+
+.nationality-input{
+width:500.73px;
+padding: 7px 12px;
+border-radius: 4px;
+height: 40px;
+
+
+/*  */
+background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 86%);
+    border-radius: 4px;
+    color: hsl(0, 0%, 21%);
+
+}
+
+.title-input{
+width:120px;
+padding: 7px 12px;
+border-radius: 4px;
+height: 40px;
+/*  */
+background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 86%);
+    border-radius: 4px;
+    color: hsl(0, 0%, 21%);
+
 }
 form{
 /* width: 75%;

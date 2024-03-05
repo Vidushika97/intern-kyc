@@ -1,11 +1,14 @@
 <template>
   <div>
-    <FormSignup :disabled="showModal"></FormSignup> 
-    <b-modal v-model="showModal" :title="modalHeader">
+    
+    <b-modal v-model="showOtpModal" :title="modalHeader" :can-cancel="false">
       <div class="form-container">
         <form>   
-          <h6>ENTER OTP CODE</h6>
-          <p>OTP code has been sent to {{ localContactNumber }}  Enter the code below to continue.</p>
+          <h6>
+            <button @click="closeModal" class="delete-btn">X</button>
+            ENTER OTP CODE
+          </h6>
+          <p>OTP code has been sent to {{contactNumber}}  Enter the code below to continue.</p>
 
           <div class="otp-inputs">
             <input class="otp-digits" ref="otpInput0" v-model="otpDigits[0]" maxlength="1" type="number" @input="moveToNext(0)" @keydown="moveToPrevious($event, 0)">
@@ -18,8 +21,8 @@
           
 
           <div class="countdown">
-            <p v-if="timer > 0">{{ formatTime(timer) }}</p>
-            <p v-else style="text-decoration: underline; cursor: pointer;" @click="resendOTP">Resend the OTP</p>
+            <p style="font-size: 28px;" v-if="timer > 0">{{ formatTime(timer) }}</p>
+            <p style="text-decoration: underline; cursor: pointer; color:red" @click="resendOTP">Resend the OTP</p>
           </div>
 
           <div class="buttons">
@@ -33,8 +36,9 @@
 </template>
 
 <script>
-import FormSignup from './FormSignup.vue';
+
 import axios from 'axios';
+
 
 
 export default {
@@ -42,7 +46,7 @@ export default {
   name:'otpModal',
 
   components: {
-    FormSignup,
+    
     
   },
   props:
@@ -51,13 +55,13 @@ export default {
 
   data() {
     return {
-      showModal: true,
+      showOtpModal: true,
       modalHeader: "OTP Verification",
       otpDigits: ['', '', '', '', ''],
       timer: 60,
       otpSent: false,
       showOTPAlert: false,
-      localContactNumber:'',
+      
       
     };
   },
@@ -66,13 +70,11 @@ export default {
       if (this.otpDigits.some(digit => !digit.trim())) {
         this.showOTPAlert = true; 
         return;
-      }
-       
-      
+      }      
       const otpCode = this.otpDigits.join('');
       axios.post(
         'https://localhost:7232/api/ContactNumber/VerifyOTP',
-        { otp: otpCode, contact_number: this.localContactNumber }
+        { otp: otpCode, contact_number: this.contactNumber }
 
       ).then(response => {
        console.log('Response:', response) 
@@ -83,7 +85,7 @@ export default {
            type: 'is-success'
           });
 
-        this.$router.push('/signup');
+         this.showOtpModal = false;
       } 
       else {
          
@@ -102,14 +104,18 @@ export default {
         
       });
     },
+     
+     closeModal() {
+     this.showOtpModal = false;
+    },
     redirectToLogin() {
       
       this.otpDigits = ['', '', '', '', ''];
       
-      this.showModal = false;
+      
       
       this.$nextTick(() => {
-        this.$router.push('/');
+        this.showOtpModal = false;
       });
     },
     moveToNext(index) {
@@ -130,7 +136,7 @@ export default {
       return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     },
     resendOTP() {
-    this.timer = 60;
+    this.timer = 10;
     this.otpSent = true;
     const countdown = setInterval(() => {
         if (this.timer > 0) {
@@ -180,8 +186,8 @@ export default {
       });
     });
     this.resendOTP();
-    this.localContactNumber = this.$route.params.contact;
-    console.log("contact no :",this.localContactNumber)
+    // this.localContactNumber = this.$route.params.contact;
+    console.log("contact no :",this.contactNumber)
   }
 };
 
@@ -200,14 +206,14 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-
-
 .form-container {
-  width: 400px;
+  width: 450px;
   height: 400px;
   margin-left: auto;
   margin-right: auto;
   background-color: white;
+  border-radius: 10px;
+  position: relative;
 }
 
 h6 {
@@ -218,6 +224,20 @@ h6 {
   color: white;
   font-size: 20px;
   font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  letter-spacing: 1.5px;
+}
+
+.delete-btn {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  font-weight: 700;
+  position: absolute;
+  top: 10px;
+  right: 7px;
 }
 
 p {
@@ -228,20 +248,25 @@ p {
 form {
   width: 100%;
   height: 100%;
+  font-family: poppins;
 }
 
 .buttons {
-  margin-top: 80px; 
+  margin-top: 55px; 
   margin-left: 20px;
 }
 
 #verify {
   background-color: #F54D4D;
   width: 160px;
+  font-weight: 600;
 }
 
 #back {
   margin-right: 140px;
+  margin-left: 20px;
+  width: 100px;
+  font-weight: 600;
 }
 
 .otp-inputs {
@@ -251,21 +276,33 @@ form {
   margin-left: 15px;
   margin-right: 15px;
   text-align: center;
-  
 }
 
 .otp-digits {
-  width: 40px;
-  height: 40px;
+  width: 43px;
+  height: 55px;
   margin: 0 5px;
   justify-content: center;
   text-align: center;
+  border-radius: 10px;
+  background-color: #F8F8FA;
 }
 
-span{
+span {
   font-size: 12px;
   color: red;
   margin-left: 20px;
 }
 
+.countdown {
+  font-size: 24px; 
+  margin-bottom: 10px; 
+  margin-top: 15px;
+}
+
+.resend-otp {
+  text-decoration: underline;
+  cursor: pointer;
+  color: red;
+}
 </style>

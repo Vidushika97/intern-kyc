@@ -1,6 +1,10 @@
 <template>
 <div>
 <HeaderView/>
+   <div v-if="showModalSuccess">
+           <SuccessModal/>
+
+    </div>
   <div>
     <h1>KYC Form</h1>
     <h6>Please enter your valid Name & email address to using all of our</h6>
@@ -99,6 +103,7 @@
 import FooterView from './FooterView.vue';
 import HeaderView from './HeaderView.vue';
 import {useMyStore} from '../storage/myStore.js';
+import SuccessModal from './SuccessModal.vue';
 
 export default {
   name:'PreviewForm',
@@ -116,19 +121,24 @@ export default {
       imageUrlSelfie: "",
       nationality:"",
       selectTitle:"",
-      inputEmail:"",}
+      inputEmail:"",
+      showModalSuccess:false,
+     
+      }
   },
 
    components:{
     
      HeaderView,
      FooterView,
+     SuccessModal,
      
 },
    methods: {
     submit() {
       console.log('test', this.imageUrlFront)
-      this.$router.push('/success');
+      this.showModalSuccess = true;
+      console.log('modal-display',this.showModalSuccess)
     },
 
     goBack() {

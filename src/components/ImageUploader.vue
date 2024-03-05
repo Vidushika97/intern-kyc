@@ -1,6 +1,7 @@
 <template>
   <div>
     <div id="image-container" @dragover.prevent @drop="handleDrop">
+       <img :style="{ display: showPreviewImage ? 'block' : 'none' }" src="../assets/preview_image.png"/>
       <img v-if="imageUrl" :src="imageUrl" alt="Uploaded Image" id="preview-image">
       <p v-else>Drop your image here</p>
       <p>or</p>
@@ -19,56 +20,57 @@ export default {
   data() {
     return {
       imageUrl: "",
+      showPreviewImage: true
     };
   },
  methods: {
 handleDrop(event) {
-  event.preventDefault();
-  const file = event.dataTransfer.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.imageUrl = e.target.result;
-      // Optionally emit the base64 image URL to the parent component
-      if(this.imageUrl!==""){
-      this.$emit('custom-event', this.imageUrl);}
-    };
-    reader.readAsDataURL(file);
-  }
-},
+      event.preventDefault();
+      const file = event.dataTransfer.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imageUrl = e.target.result;
+          // Optionally emit the base64 image URL to the parent component
+          if (this.imageUrl !== "") {
+            this.$emit('custom-event', this.imageUrl);
+          }
+          this.showPreviewImage = false; // Hide the preview image
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    async captureImage() {
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const video = document.createElement('video');
+        video.srcObject = mediaStream;
+        video.play();
+        video.onloadedmetadata = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
+          // Convert captured image to base64
+          const base64ImageURL = canvas.toDataURL('image/png');
 
-  async captureImage() {
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-      const video = document.createElement('video');
-      video.srcObject = mediaStream;
-      video.play();
-      video.onloadedmetadata = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          // Set the base64 image URL to imageUrl
+          this.imageUrl = base64ImageURL;
+          console.log("image url", this.imageUrl);
 
-        // Convert captured image to base64
-        const base64ImageURL = canvas.toDataURL('image/png');
+          video.srcObject.getTracks().forEach(track => track.stop());
+          this.$emit('custom-event', this.imageUrl);
+          this.showPreviewImage = false; // Hide the preview image
+        };
 
-        // Set the base64 image URL to imageUrl
-        this.imageUrl = base64ImageURL;
-        console.log("image url",this.imageUrl)
-
-        video.srcObject.getTracks().forEach(track => track.stop());
-        this.$emit('custom-event', this.imageUrl); 
-      };
-
-// Emit the base64 image URL
-      
-    } catch (error) {
-      console.error('Error accessing camera:', error);
+      // Emit the base64 image URL
+          
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+      }
     }
   }
-}
-
 };
 </script>
 

@@ -102,18 +102,28 @@ let imageUpload = {
 };
 
 // Call the api_request function from NetworkManager
-NetworkManager.api_request('/FileUpload/UploadImage', imageUpload)
+// NetworkManager.api_request('/FileUpload/UploadImage', imageUpload)
 
-      this.$buefy.toast.open({
-          message: 'Data saved successfully!',
-           type: 'is-success'
-          });
+//       this.$buefy.toast.open({
+//           message: 'Data saved successfully!',
+//            type: 'is-success'
+//           });
 	
+       NetworkManager.api_request('/FileUpload/UploadImage', imageUpload, this)
+            .then(response => {
+              console.log('Response:', response.data.data,);
+              this.$router.push('/preview');
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              // Handle error response
+            });
+      
         
-        this.$router.push('/preview');
-      } else {
-        //alert('Please fill all fields of the image uploader.');
-      }
+      } 
+      // else {
+      //   //alert('Please fill all fields of the image uploader.');
+      // }
     },
 
     goBack() {

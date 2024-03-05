@@ -1,10 +1,12 @@
 <template>
   <div>
-    <PreviewForm></PreviewForm> 
-    
-      <b-modal v-model="showModal">
+      <b-modal v-model="showModalSuccess" :can-cancel="false">
         <div class="form-container">
          <form>
+          <h5>
+              <button @click="closeModal" class="delete-btn">X</button>
+              
+            </h5>
           <div class="image-container" >
           <img src="../assets/success.png" width="150px" height="150px"/> 
           </div>
@@ -12,35 +14,27 @@
             <h6>CONGRATULATIONS!</h6>
             <p>Your KYC data has been Submitted successfully</p>
           </div>  
-            
-        
           
-
           <div class="buttons">
-            
             <b-button id="continue" @click="ok" type="is-primary">OK</b-button>
           </div>
          </form>
         </div>
       </b-modal>
-    
-   
   </div>
 </template>
 
 <script>
-import PreviewForm from './PreviewForm.vue';
+
 
 export default {
   components: {
-    PreviewForm,
+    
   },
   data() {
     return {
-      showModal: false,
-      selectedCountryCode: "", // Initialize with an empty string or default country code
-      mobileNumber: "" // Initialize with an empty string
-    };
+      showModalSuccess: true,
+ };
   },
   methods: {
     ok() {
@@ -49,12 +43,12 @@ export default {
     },
     closeModal() {
      
-      this.showModal = false;
+      this.showModalSuccess = false;
     }
   },
-  mounted() {
-    this.showModal = true;
-  }
+  // mounted() {
+  //   this.showModalSuccess = true;
+  // }
 }
 </script>
 
@@ -65,20 +59,28 @@ export default {
   margin-left: auto; /* Center horizontally */
   margin-right: auto; /* Center horizontally */
   background-color: white;
+  border-radius: 10px;
+  position: relative;
 }
 
 h6{
     text-align:center;
     color: #F54D4D;
     margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 25px;
+    margin-bottom: 12px;
+    font-size: 22px;
     font-weight: bold;
+  
 
+}
+
+h5{
+  padding:5px
 }
 
 p{
     text-align:center;
+    font-size: 12px;
     
     
 }
@@ -87,12 +89,13 @@ form{
     width:100%;
     height:100%;
     margin-top: 20px;
+    font-family: poppins;
     
     
 }
 
 .buttons{
-   margin-top:80px; 
+   margin-top:60px; 
    margin-left: 120px;
    
 }
@@ -105,10 +108,19 @@ form{
 
 .image-container{
    text-align: center;
-   margin-bottom: 20px;
+   margin-bottom: 2px;
    margin-top: 20px;
 }
-
+.delete-btn {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  font-weight: 700;
+  position: absolute;
+  top: 10px;
+  right: 7px;
+}
 
 
 </style>
