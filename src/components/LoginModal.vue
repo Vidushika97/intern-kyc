@@ -40,6 +40,7 @@
                     v-model="mobileNumber"
                     type="number"
                     placeholder="Enter Mobile Number"
+                    @keydown="handleKeyDown"
                   />
                   <span class="mobile-number-span">{{ errors[0] }}</span>
                 </ValidationProvider>
@@ -133,10 +134,33 @@ export default {
       this.setOtpModal();
     },
 
+        handleKeyDown(event) {
+      // Check if Ctrl key is pressed
+      if (event.ctrlKey) {
+        // Prevent default action
+        event.preventDefault();
+        // You can also add a custom message or action here if needed
+        console.log("Ctrl key is disabled.");
+        return false;
+      }
+
+      // Check if . (period) key is pressed
+      if (event.key === '.') {
+        // Prevent default action
+        event.preventDefault();
+        // You can also add a custom message or action here if needed
+        console.log(". (period) key is disabled.");
+        return false;
+      }
+      
+      else
+      return true;
+    },
+
     closeModal() {
       this.selectedCountryCode = "";
       this.mobileNumber = "";
-      this.$emit("close-modal");
+      this.showModal=false;
     },
   },
   computed: {

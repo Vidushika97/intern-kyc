@@ -13,33 +13,45 @@
   <div class="form-container"> 
    <form>
     <div class="columns is-8 is-mobile">
-    <div class="column is-half">
+    <div class="column is-one-fifth">
     
-    <b-field label="Title">
-            <b-select v-model="selectTitle" placeholder="Select One" required>
+    <b-field>
+      <template #label>
+            Title <b style="color:red;">*</b>
+            </template>
+            <b-select v-model="selectTitle" placeholder="Select One" expanded disabled>
                 <option value="mr">Mr.</option>
                 <option value="ms">Ms.</option>
             </b-select>
         </b-field>
     </div>
-    <div class="column is-half">
-     <b-field label="Full Name">
-            <b-input v-model="fullName"></b-input>
+    <div class="column is-four-fifths">
+     <b-field>
+            <template #label>
+            Full Name <b style="color:red;">*</b>
+            </template>
+            <b-input v-model="fullName" expanded disabled></b-input>
         </b-field>
   </div>
   </div>
   <div class="columns is-8 is-mobile">
     <div class="column is-half">
-    <b-field label="Mobile Number">
-            <b-input v-model="number"></b-input>
+    <b-field>
+      <template #label>
+            Mobile Number <b style="color:red;">*</b>
+            </template>
+            <b-input v-model="number" disabled></b-input>
             
         </b-field>
     </div>
     <div class="column is-half">
-    <b-field label="Email">
+    <b-field>
+           <template #label>
+            Email <b style="color:red;">*</b>
+            </template>
             <b-input v-model="inputEmail" type="email"
                 value="john@"
-                maxlength="30">
+                maxlength="30" disabled>
             </b-input>
         </b-field>
   </div>
@@ -48,18 +60,24 @@
 
 <div class="columns is-8 is-mobile">
     <div class="column is-half">
-    <b-field label="NIC Number">
-            <b-input v-model="NIC"></b-input>
+    <b-field>
+            <b-input v-model="NIC" disabled></b-input>
+            <template #label>
+            NIC Number <b style="color:red;">*</b>
+            </template>
         </b-field>
     </div>
     <div class="column ">
-        <b-field label="Nationality">
-            <b-select v-model="nationality" placeholder="Select One">
+        <b-field >
+            <b-select v-model="nationality" placeholder="Select One" disabled expanded>
                 <option value="sinhala">Sinhala</option>
                 <option value="tamil">Tamil</option>
                 <option value="muslim">Muslim</option>
                 <option value="malay">Malay</option>
             </b-select>
+            <template #label>
+            Nationality <b style="color:red;">*</b>
+            </template>
         </b-field>
      
   </div>
@@ -67,16 +85,16 @@
 
   <div class="columns is-vcentered is-multiline is-mobile">
           <div class="column is-half">
-            <p>NIC / DL front image*</p>
-           <img :src="imageUrlFront">
+            <p>NIC / DL front image<span>*</span></p>
+           <img :src="imageUrlFront" disabled>
           </div>
           <div class="column is-half">
-            <p>NIC / DL rear image*</p>
-            <img :src="imageUrlRear">
+            <p>NIC / DL rear image<span>*</span></p>
+            <img :src="imageUrlRear" disabled>
           </div>
           <div class="column is-half">
-            <p>Selfie Image*</p>
-             <img :src="imageUrlSelfie">
+            <p>Selfie Image<span>*</span></p>
+             <img :src="imageUrlSelfie" disabled>
           </div>
           <div class="column is-half">
           </div>
@@ -236,6 +254,9 @@ letter-spacing: 0.04em;
 text-align: center;
 word-spacing: 0.1em;
 
+}
+span{
+  color:red;
 }
 
 </style>

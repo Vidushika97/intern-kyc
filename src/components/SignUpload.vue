@@ -8,16 +8,16 @@
       <form>
         <div class="columns is-vcentered is-multiline is-mobile">
           <div class="column is-half">
-            <p>NIC / DL front image*</p>
+            <p>NIC / DL front image<span>*</span></p>
             <ImageUploader @custom-event="(front)=>{captureImageFront(front)}"></ImageUploader>
             
           </div>
           <div class="column is-half">
-            <p>NIC / DL rear image*</p>
+            <p>NIC / DL rear image<span>*</span></p>
             <ImageUploader @custom-event="(rear)=>{captureImageRear(rear)}"></ImageUploader>
           </div>
           <div class="column is-half">
-            <p>Selfie Image*</p>
+            <p>Selfie Image<span>*</span></p>
             <ImageUploader @custom-event="(selfie)=>{captureImageSelfie(selfie)}"></ImageUploader>
           </div>
         </div>
@@ -180,5 +180,9 @@ h6 {
 .buttons {
   margin-left: 50%;
   margin-bottom: 5%;
+}
+
+span{
+  color:red;
 }
 </style>

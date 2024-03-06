@@ -18,15 +18,24 @@
          <form @submit.prevent="handleSubmit(onSubmit)">
             <div class="columns is-8 is-mobile">
               <div class="column is-one-fifth">
-                <b-field label="Title">
-                  <select  class="title-input"  v-model="myStore.title" placeholder="Select One">
+                <b-field>
+                  <template #label>
+                   Title <b style="color:red;">*</b>
+                  </template>
+                  <ValidationProvider name="Title" rules="required" v-slot="{ errors }">
+                  <b-select  class="title-input"  v-model="myStore.title" placeholder="Select One" expanded>
                     <option class="title-option" value="mr">Mr.</option>
                     <option  value="ms">Ms.</option>
-                  </select>
+                  </b-select>
+                  <span>{{ errors[0] }}</span>
+                 </ValidationProvider>
                 </b-field>
               </div>
               <div class="column is-four-fifths">
-                <b-field label="Full Name">
+                <b-field>
+                  <template #label>
+                  Full Name <b style="color:red;">*</b>
+                  </template>
                   <ValidationProvider name="Full Name" rules="required|alpha_spaces" v-slot="{ errors }">
                     <b-input v-model="myStore.full_name"></b-input>
                     <span>{{ errors[0] }}</span>
@@ -36,15 +45,21 @@
             </div>
             <div class="columns is-8 is-mobile">
               <div class="column is-half">
-                <b-field label="Mobile Number">
+                <b-field>
+                  <template #label>
+                  Mobile Number <b style="color:red;">*</b>
+                  </template>
                   <ValidationProvider name="Mobile Number" rules="required" v-slot="{ errors }">
-                    <b-input v-model="myStore.mobile_number" type="text" placeholder="+94XXXXXXXXX"></b-input>
+                    <b-input v-model="myStore.mobile_number" type="text" placeholder="+94XXXXXXXXX" disabled></b-input>
                     <span>{{ errors[0] }}</span>
                   </ValidationProvider>
                 </b-field>
               </div>
               <div class="column is-half">
-                <b-field label="Email">
+                <b-field>
+                  <template #label>
+                  Email <b style="color:red;">*</b>
+                  </template>
                   <ValidationProvider name="Email" rules="required" v-slot="{ errors }">
                     <b-input v-model="myStore.email" type="email" maxlength="30"></b-input>
                     <span>{{ errors[0] }}</span>
@@ -54,7 +69,10 @@
             </div>
             <div class="columns is-8 is-mobile">
               <div class="column is-half">
-                <b-field label="NIC Number">
+                <b-field>
+                  <template #label>
+                  NIC Number <b style="color:red;">*</b>
+                  </template>
                   <ValidationProvider name="NIC Number" rules="required" v-slot="{ errors }">
                     <b-input v-model="myStore.nicNumber"></b-input>
                     <span>{{ errors[0] }}</span>
@@ -62,11 +80,14 @@
                 </b-field>
               </div>
               <div class="column">
-                <b-field label="Nationality">
+                <b-field>
+                  <template #label>
+                  Nationality <b style="color:red;">*</b>
+                  </template>
                    <ValidationProvider name="Nationality" rules="required" v-slot="{ errors }">
-                    <select class="nationality-input" v-model="myStore.nationality" placeholder="Select One">
+                    <b-select class="nationality-input" v-model="myStore.nationality" placeholder="Select One" expanded>
                       <option class="nationality-options" v-for="option in nationalityOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
-                    </select>
+                    </b-select>
                     <span>{{ errors[0] }}</span>
                   </ValidationProvider>
                 </b-field>
@@ -85,13 +106,14 @@
 </template>
 
 <script>
-import { extend } from 'vee-validate';
+// import { Validator} from 'vee-validate';
 import FooterView from './FooterView.vue';
 import HeaderView from './HeaderView.vue';
 import { useMyStore } from '../storage/myStore.js';
 import NetworkManager from '../network/NetworkManager.js';
 import LoginModal from './LoginModal.vue';
 import OtpModal from './OtpModal.vue';
+
 // Extend VeeValidate with custom rules
 // extend('required', {
 //   validate(value) {
@@ -103,7 +125,157 @@ import OtpModal from './OtpModal.vue';
 //   message: 'This field is required',
 // });
 
-extend('alpha_spaces', value => /^[A-Za-z\s]*$/.test(value) || 'Only alphabetic characters are allowed');
+// extend('alpha_spaces', value => /^[A-Za-z\s]*$/.test(value) || 'Only alphabetic characters are allowed');
+
+// extend('nic_rule', {
+//   validate: value => {
+//     const minval = 10; // Minimum length of NIC number
+//     const pattern = /^[0-9]{9}[vVxX]?$/.source; // Regular expression pattern for NIC number validation
+
+//     if (value.length < minval) {
+//       return `NIC number is less than ${minval} digits.`;
+//     } else if (value.length === 10 || value.length === 12) {
+//       const regex = new RegExp(pattern);
+//       if (!regex.test(value)) {
+//         return 'Enter a valid NIC number.';
+//       } else {
+//         return true;
+//       }
+//     } else {
+//       return 'NIC number is invalid.';
+//     }
+//   },
+//   message: 'Invalid NIC number.'
+// }); 
+
+// Validator.extend("nicValidate", {
+//   valid: true,
+//   validate(value) {
+//     console.log('validate')
+//     const length = value.length;
+//     const firstDigit = value.charAt(0);
+//     const secondDigit = value.charAt(1);
+//     const thirdDigit = value.charAt(2);
+//     const fourthDigit = value.charAt(3);
+//     const fifthDigit = value.charAt(4);
+//     const sixthDigit = value.charAt(5);
+//     const seventhDigit = value.charAt(6);
+//     if (length !== 10 && length !== 12) {
+//       this.valid = false;
+//       return this.valid;
+//     } else if (length === 10) {
+//       if (
+//         firstDigit === "0" ||
+//         firstDigit === "1" ||
+//         firstDigit === "2" ||
+//         firstDigit === "3" ||
+//         firstDigit === "4"
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         thirdDigit === "0" &&
+//         fourthDigit === "0" &&
+//         fifthDigit === "0"
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (thirdDigit === "9" || thirdDigit === "4") {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         (thirdDigit === "8" || thirdDigit === "3") &&
+//         (fourthDigit === "7" || fourthDigit === "8" || fourthDigit === "9")
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         (thirdDigit === "8" || thirdDigit === "3") &&
+//         fourthDigit === "6" &&
+//         (fifthDigit === "7" || fifthDigit === "8" || fifthDigit === "9")
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         thirdDigit === "5" &&
+//         fourthDigit === "0" &&
+//         fifthDigit === "0"
+//       ) {
+//         this.valid = true;
+//         return this.valid;
+//       } else {
+//         this.valid = true;
+//         return this.valid;
+//       }
+//     } else if (length === 12) {
+//       if (firstDigit !== "1" && firstDigit !== "2") {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (firstDigit === "1" && secondDigit !== "9") {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (firstDigit === "2" && secondDigit !== "0") {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         firstDigit === "1" &&
+//         secondDigit === "9" &&
+//         (thirdDigit === "0" ||
+//           thirdDigit === "1" ||
+//           thirdDigit === "2" ||
+//           thirdDigit === "3" ||
+//           thirdDigit === "4")
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         firstDigit === "2" &&
+//         secondDigit === "0" &&
+//         thirdDigit !== "0"
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         fifthDigit === "0" &&
+//         sixthDigit === "0" &&
+//         seventhDigit === "0"
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (fifthDigit === "9" || fifthDigit === "4") {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         (fifthDigit === "8" || fifthDigit === "3") &&
+//         (sixthDigit === "7" || sixthDigit === "8" || sixthDigit === "9")
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         (fifthDigit === "8" || fifthDigit === "3") &&
+//         sixthDigit === "6" &&
+//         (seventhDigit === "7" || seventhDigit === "8" || seventhDigit === "9")
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else if (
+//         fifthDigit === "5" &&
+//         sixthDigit === "0" &&
+//         seventhDigit === "0"
+//       ) {
+//         this.valid = false;
+//         return this.valid;
+//       } else {
+//         this.valid = true;
+//         return this.valid;
+//       }
+      
+//     }
+//   },
+//   message: () => {
+//     return "Please enter a valid NIC number";
+//   },
+// }); 
 
 export default {
   name: 'FormSignup',
@@ -129,7 +301,7 @@ export default {
     HeaderView,
     LoginModal,
     OtpModal,
-    
+
   },
    computed: {
     invalid() {
@@ -155,7 +327,7 @@ export default {
           NetworkManager.api_request('/KYC/RegisterKYCForm', kycDetails,this)
             .then(response => {
               console.log('Response:', response.data);
-            
+              
               this.$router.push('/upload');
             })
             
@@ -214,33 +386,34 @@ word-spacing: 0.1em;
   
 }
 
-.nationality-input{
+/* .nationality-input{
 width:500.73px;
 padding: 7px 12px;
 border-radius: 4px;
-height: 40px;
+height: 40px; */
 
 
 /*  */
-background-color: hsl(0, 0%, 100%);
+/* background-color: hsl(0, 0%, 100%);
     border-color: hsl(0, 0%, 86%);
     border-radius: 4px;
     color: hsl(0, 0%, 21%);
 
-}
+} */
 
-.title-input{
+/* .title-input{
 width:120px;
 padding: 7px 12px;
 border-radius: 4px;
-height: 40px;
+height: 40px; */
 /*  */
-background-color: hsl(0, 0%, 100%);
+/* background-color: hsl(0, 0%, 100%);
     border-color: hsl(0, 0%, 86%);
     border-radius: 4px;
     color: hsl(0, 0%, 21%);
 
-}
+} */
+
 form{
 /* width: 75%;
 height: 25%; 
@@ -274,8 +447,16 @@ width: 90%; /* Ensure the form takes full width of its container */
   margin-bottom: 5%;
   
 }
-#label{
-  font-size: 5px;
+/* Hide the automatically added asterisks */
+.b-field:not(.has-error) .b-label.has-text.required::after {
+  content: none;
+}
+
+/* Style the manually added asterisks */
+.b-field:not(.has-error) .b-label.has-text.required::before {
+  content: '*';
+  color: red;
+  margin-right: 4px; /* Adjust as needed */
 }
 
 span {

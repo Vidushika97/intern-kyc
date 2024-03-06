@@ -20,10 +20,17 @@
            <span v-if="showOTPAlert" class="otp-error">Please fill all OTP fields.</span>
           
 
-          <div class="countdown">
-            <p style="font-size: 28px;" v-if="timer > 0">{{ formatTime(timer) }}</p>
-            <p style="text-decoration: underline; cursor: pointer; color:red" @click="resendOTP">Resend the OTP</p>
-          </div>
+    <div class="countdown">
+    <p style="font-size: 28px;" v-if="timer > 0">{{ formatTime(timer) }}</p>
+    <p
+      style="text-decoration: underline; cursor: pointer; color:red"
+      @click="timer === 0 ? resendOTP() : null"
+    >
+      Resend the OTP
+    </p>
+  </div>
+
+
 
           <div class="buttons">
             <b-button id="back" @click="redirectToLogin">Back</b-button>
@@ -58,12 +65,17 @@ export default {
       showOtpModal: true,
       modalHeader: "OTP Verification",
       otpDigits: ['', '', '', '', ''],
-      timer: 60,
+      timer: 10,
       otpSent: false,
       showOTPAlert: false,
       
       
     };
+  },
+   computed: {
+    isClickable() {
+      return this.timer === 0;
+    }
   },
   methods: {
     verify(){
