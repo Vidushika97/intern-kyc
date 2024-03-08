@@ -16,15 +16,15 @@
            
         <div class="form-container"> 
          <form @submit.prevent="">
-            <!-- <div class="columns is-8 is-mobile">
+            <div class="columns is-8 is-mobile">
               <div class="column is-one-fifth">
                 <b-field>
                   <template #label>
                    Title <b style="color:red;">*</b>
                   </template>
-                  <ValidationProvider name="Title" rules="required" v-slot="{ errors }"> -->
-                  <!-- <b-select  class="title-input"  v-model="myStore.title" placeholder="Select One" expanded> -->
-                    <!-- <option class="title-option" value="mr">Mr.</option>
+                  <ValidationProvider name="Title" rules="required" v-slot="{ errors }"> 
+                   <b-select  class="title-input"  v-model="myStore.title" placeholder="Select One" expanded> 
+                    <option class="title-option" value="mr">Mr.</option>
                     <option  value="ms">Ms.</option>
                   </b-select>
                   <span>{{ errors[0] }}</span>
@@ -66,7 +66,7 @@
                   </ValidationProvider>
                 </b-field>
               </div>
-            </div> -->
+            </div> 
             <div class="columns is-8 is-mobile">
               <div class="column is-half">
                 <b-field>
@@ -75,6 +75,7 @@
                   </template>
                   <ValidationProvider name="NIC Number"  :rules="{
                         required: true,
+                        nicValidate:true,
                       
                       }" v-slot="{ errors }">
                     <b-input v-model="myStore.nicNumber"></b-input>
@@ -82,7 +83,7 @@
                   </ValidationProvider>
                 </b-field>
               </div>
-              <!-- <div class="column">
+              <div class="column">
                 <b-field>
                   <template #label>
                   Nationality <b style="color:red;">*</b>
@@ -94,7 +95,7 @@
                     <span>{{ errors[0] }}</span>
                   </ValidationProvider>
                 </b-field>
-              </div> -->
+              </div>
             </div>
             <div class="buttons">
               <b-button id="back" @click="goBack"  :disabled="handleSubmit">Back</b-button>
@@ -116,7 +117,8 @@ import { useMyStore } from '../storage/myStore.js';
 import NetworkManager from '../network/NetworkManager.js';
 import LoginModal from './LoginModal.vue';
 import OtpModal from './OtpModal.vue';
-import '../validation/validation.js';
+
+
 
 // Extend VeeValidate with custom rules
 // extend('required', {

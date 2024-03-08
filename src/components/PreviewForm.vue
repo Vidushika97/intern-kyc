@@ -157,6 +157,9 @@ export default {
       console.log('test', this.imageUrlFront)
       this.showModalSuccess = true;
       console.log('modal-display',this.showModalSuccess)
+    this.imageUrlFront = null
+    this.imageUrlRear = null
+    this.imageUrlSelfie = null 
     },
 
     goBack() {

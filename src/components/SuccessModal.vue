@@ -38,8 +38,10 @@ export default {
   },
   methods: {
     ok() {
-    
+      localStorage.clear();
       this.closeModal();
+      
+      
     },
     closeModal() {
      

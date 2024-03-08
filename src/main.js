@@ -4,10 +4,12 @@ import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import VueRouter from 'vue-router'
 import Routes from '@/routes'
-import { ValidationProvider } from 'vee-validate/dist/vee-validate.full.esm';
-import { ValidationObserver } from 'vee-validate';
+// import { ValidationProvider } from 'vee-validate/dist/vee-validate.full.esm';
+// import { ValidationObserver } from 'vee-validate';
 import OtpInput from "@bachdgvn/vue-otp-input";
 import { createPinia, PiniaVuePlugin } from 'pinia'
+import './validation/validation.js';
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 Vue.config.productionTip = false
 

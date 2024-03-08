@@ -11,10 +11,11 @@ import {
     // email,
     // image,
     // size,
-    // min,
+    min,
     // alpha,
     // min_value,
     // alpha_dash,
+    max,
   } from "vee-validate/dist/rules";
 
 
@@ -24,6 +25,16 @@ import {
   extend("required", {
     ...required,
     message: "This field is required",
+  });
+
+  extend("min", {
+    ...min,
+    message: "This field must be atleast 9 characters",
+  });
+
+  extend("max", {
+    ...max,
+    message: "This field may not be greater than 9 characters",
   });
 
   extend("alpha_spaces,", {
@@ -39,7 +50,7 @@ import {
 // });
 
 
- extend("alpha_dash", {
+ extend("nicValidate", {
   valid: true,
   validate(value) {
     console.log('validate')
