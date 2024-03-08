@@ -9,16 +9,16 @@
         <div class="columns is-vcentered is-multiline is-mobile">
           <div class="column is-half">
             <p>NIC / DL front image<span>*</span></p>
-            <ImageUploader @custom-event="(front)=>{captureImageFront(front)}"></ImageUploader>
+            <ImageUploader :imgName = "base64NICFrontImage" @custom-event="(front)=>{captureImageFront(front)}"></ImageUploader>
             
           </div>
           <div class="column is-half">
             <p>NIC / DL rear image<span>*</span></p>
-            <ImageUploader @custom-event="(rear)=>{captureImageRear(rear)}"></ImageUploader>
+            <ImageUploader :imgName = "base64NICBackImage" @custom-event="(rear)=>{captureImageRear(rear)}" ></ImageUploader>
           </div>
           <div class="column is-half">
             <p>Selfie Image<span>*</span></p>
-            <ImageUploader @custom-event="(selfie)=>{captureImageSelfie(selfie)}"></ImageUploader>
+            <ImageUploader :imgName = "base64SelfieImage" @custom-event="(selfie)=>{captureImageSelfie(selfie)}"></ImageUploader>
           </div>
         </div>
       </form> 
@@ -41,18 +41,40 @@ import { useMyStore } from '../storage/myStore.js';
 import NetworkManager from '../network/NetworkManager.js'; 
 
 export default {
-  name: 'SignUpload',
+ name: 'SignUpload',
+ props: ['imgName'],
   data() {
     return {
-     
+      base64NICFrontImage: "base64NICFrontImage",
+      base64NICBackImage:"base64NICBackImage" ,
+      base64SelfieImage: "base64SelfieImage",
+      imgObj: {
+        img1: null,
+        img2: null,
+        img3: null
+      }
+
     };
   },
   setup() {
     const myStore = useMyStore();
-
     return { myStore };
   },
-  
+  mounted() {
+  const storedFrontImage = localStorage.getItem('base64NICFrontImage');
+  const storedRearImage = localStorage.getItem('base64NICBackImage');
+  const storedSelfieImage = localStorage.getItem('base64SelfieImage');
+
+  console.log("hit this");
+
+  if (storedFrontImage && storedRearImage && storedSelfieImage) {
+    console.log("also this");
+    this.myStore.base64NICFrontImage = storedFrontImage;
+    this.myStore.base64NICBackImage = storedRearImage;
+    this.myStore.base64SelfieImage = storedSelfieImage;
+  }
+},
+
   methods: {
 
     captureImageFront(front) {
@@ -60,6 +82,7 @@ export default {
       console.log('front', front)
       
       this.myStore.base64NICFrontImage =  front;
+      localStorage.setItem('base64NICFrontImage', front);
       
     },
 
@@ -67,6 +90,7 @@ export default {
       
       
       this.myStore.base64NICBackImage = rear;
+      localStorage.setItem('base64NICBackImage', rear);
       
     },
 
@@ -74,6 +98,7 @@ export default {
       
       
       this.myStore.base64SelfieImage = selfie;
+      localStorage.setItem('base64SelfieImage', selfie);
       
     },
 

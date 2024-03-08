@@ -44,7 +44,8 @@
 
 <script>
 
-import axios from 'axios';
+// import axios from 'axios';
+import NetworkManager from "../network/NetworkManager.js";
 
 
 
@@ -68,8 +69,7 @@ export default {
       timer: 10,
       otpSent: false,
       showOTPAlert: false,
-      
-      
+            
     };
   },
    computed: {
@@ -84,37 +84,50 @@ export default {
         return;
       }      
       const otpCode = this.otpDigits.join('');
-      axios.post(
-        'https://localhost:7232/api/ContactNumber/VerifyOTP',
-        { otp: otpCode, contact_number: this.contactNumber }
+      const otpDetails = {
+            contact_number: this.LocalContactNumber,
+            otp:otpCode,
+          };
+           console.log(otpDetails);
 
-      ).then(response => {
-       console.log('Response:', response) 
+          NetworkManager.api_request('/ContactNumber/VerifyOTP', otpDetails,this)
+            .then(response => {
+              console.log('Response:', response.data);
+              
+              this.$router.push('/upload');
+            })
+      // const otpCode = this.otpDigits.join('');    
+      // axios.post(
+      //   'https://localhost:7232/api/ContactNumber/VerifyOTP',
+      //   { otp: otpCode, contact_number: this.contactNumber }
+
+      // ).then(response => {
+      //  console.log('Response:', response) 
         
-          if (response.data.status_code == 200) {
-          this.$buefy.toast.open({
-          message: 'Successfully logged in!',
-           type: 'is-success'
-          });
+      //     if (response.data.status_code == 200) {
+      //     this.$buefy.toast.open({
+      //     message: 'Successfully logged in!',
+      //      type: 'is-success'
+      //     });
 
-         this.showOtpModal = false;
-      } 
-      else {
+      //    this.showOtpModal = false;
+      // } 
+      // else {
          
-                this.$buefy.toast.open({
-                    duration: 5000,
-                    message: 'Invalid OTP!',
-                    position: 'is-top',
-                    type: 'is-danger'
-                });
+      //           this.$buefy.toast.open({
+      //               duration: 5000,
+      //               message: 'Invalid OTP!',
+      //               position: 'is-top',
+      //               type: 'is-danger'
+      //           });
             
         
-        console.error('Error verifying OTP:', response.data.error);
-      }
-      }).catch(error => {
-        console.error('Error verifying OTP:', error);
+      //   console.error('Error verifying OTP:', response.data.error);
+      // }
+      // }).catch(error => {
+      //   console.error('Error verifying OTP:', error);
         
-      });
+      // });
     },
      
      closeModal() {
@@ -123,7 +136,7 @@ export default {
     redirectToLogin() {
       
       this.otpDigits = ['', '', '', '', ''];
-      
+      this.$router.go(-1);
       
       
       this.$nextTick(() => {
@@ -159,32 +172,41 @@ export default {
         }
     }, 1000);
 
-    axios.post(
-        'https://localhost:7232/api/ContactNumber/ResendOTP',
-        { contact_number: this.localContactNumber }
-    )
-    .then(response => {
-        console.log('Response:', response.data);
+  
+
+            NetworkManager.api_request('/ContactNumber/ResendOTP',{ contact_number: this.LocalContactNumber } ,this)
+            .then(response => {
+              console.log('Response:', response.data);
+              
+              
+            })
+
+    // axios.post(
+    //     'https://localhost:7232/api/ContactNumber/ResendOTP',
+    //     { contact_number: this.localContactNumber }
+    // )
+    // .then(response => {
+    //     console.log('Response:', response.data);
         
-        if (response.data.status_code === 200) {
-            this.$buefy.toast.open({
-                message: 'OTP successfully resent!',
-                type: 'is-success'
-            });
-        } else {
-            this.$buefy.toast.open({
-                duration: 5000,
-                message: 'Failed to resend OTP!',
-                position: 'is-top',
-                type: 'is-danger'
-            });
-            console.error('Failed to resend OTP:', response.data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error resending OTP:', error);
+    //     if (response.data.status_code === 200) {
+    //         this.$buefy.toast.open({
+    //             message: 'OTP successfully resent!',
+    //             type: 'is-success'
+    //         });
+    //     } else {
+    //         this.$buefy.toast.open({
+    //             duration: 5000,
+    //             message: 'Failed to resend OTP!',
+    //             position: 'is-top',
+    //             type: 'is-danger'
+    //         });
+    //         console.error('Failed to resend OTP:', response.data.error);
+    //     }
+    // })
+    // .catch(error => {
+    //     console.error('Error resending OTP:', error);
         
-    });
+    // });
 }
 
   },
@@ -198,7 +220,7 @@ export default {
       });
     });
     this.resendOTP();
-    // this.localContactNumber = this.$route.params.contact;
+    this.localContactNumber = this.$route.params.contact;
     console.log("contact no :",this.contactNumber)
   }
 };

@@ -65,11 +65,11 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 import { useMyStore } from "../storage/myStore.js";
 import OtpModal from './OtpModal.vue';
 
-// import NetworkManager from "../network/NetworkManager.js";
+import NetworkManager from "../network/NetworkManager.js";
 
 export default {
   props: ['setOtpModal'],
@@ -91,7 +91,7 @@ export default {
       modalHeader: "Login",
       selectedCountryCode: "",
       mobileNumber: "",
-      contactNumber: "",
+      // contactNumber: "",
       showOtpModal:false,
     };
   },
@@ -99,6 +99,7 @@ export default {
   methods: {
     onSubmit() {
       const contactNumber = this.selectedCountryCode + this.mobileNumber;
+       
 
       // NetworkManager.api_request(
       //   "/ContactNumber/ContactNumber",
@@ -116,18 +117,24 @@ export default {
       //     // Handle error response
       //   });
       console.log("pass",contactNumber)
-      axios.post(
-       'https://localhost:7232/api/ContactNumber/ContactNumber',
-       {contact_number: contactNumber})
-       .then(response =>{
-        console.log('Response:', response.data);
-      });
-      this.$buefy.toast.open({
-          message: 'OTP is successfully generated!',
-           type: 'is-success'
-          });
+             NetworkManager.api_request('/ContactNumber/ContactNumber', {contact_number: contactNumber},this)
+            .then(response => {
+              console.log('Response:', response.data);
+              });
+      // axios.post(
+      //  'https://localhost:7232/api/ContactNumber/ContactNumber',
+      //  {contact_number: contactNumber})
+      //  .then(response =>{
+      //   console.log('Response:', response.data);
+      // });
+      // this.$buefy.toast.open({
+      //     message: 'OTP is successfully generated!',
+      //      type: 'is-success'
+      //     });
+     
+      // this.$router.push('/otp/');
       this.myStore.mobile_number = contactNumber;
-      // this.$router.push('/otp/'+contactNumber);
+      this.$router.push('/otp/'+contactNumber);
       this.showOtpModal=true;
 
       this.showModal=false;

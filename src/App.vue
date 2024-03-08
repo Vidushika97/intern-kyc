@@ -13,7 +13,7 @@
 </template>
 
 <script>
-
+import "./validation/validation";
 // import FooterView from './components/FooterView.vue';
 // import HeaderView from './components/HeaderView.vue';
 // import FormSignup from './components/FormSignup.vue';

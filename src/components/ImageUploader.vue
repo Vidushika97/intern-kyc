@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="image-container" @dragover.prevent @drop="handleDrop">
-       <img :style="{ display: showPreviewImage ? 'block' : 'none' }" src="../assets/preview_image.png"/>
+       <img :style="{ display: imageUrl ? 'none' : 'block' }" src="../assets/preview_image.png"/>
       <img v-if="imageUrl" :src="imageUrl" alt="Uploaded Image" id="preview-image">
       <p v-else>Drop your image here</p>
       <p>or</p>
@@ -15,13 +15,17 @@
 export default {
   name:'ImageUploader',
 
-   
+   props:['imgName'], 
  
   data() {
     return {
       imageUrl: "",
       showPreviewImage: true
     };
+  },
+  mounted(){
+    console.log('imgName',this.imgName);
+    this.imageUrl = localStorage.getItem(this.imgName);
   },
  methods: {
 handleDrop(event) {
@@ -32,6 +36,7 @@ handleDrop(event) {
         reader.onload = (e) => {
           this.imageUrl = e.target.result;
           // Optionally emit the base64 image URL to the parent component
+          console.log();
           if (this.imageUrl !== "") {
             this.$emit('custom-event', this.imageUrl);
           }
