@@ -11,7 +11,7 @@ const NetworkManager = {
       if (response.data.data?.message) {
         sendToast(comp, "is-success", response.data?.data?.message);
       } else {
-        sendToast(comp, "is-success", response.data?.data?.status);
+        sendToast(comp, "is-danger", response.data?.data?.status);
       }
 
       return response.data;

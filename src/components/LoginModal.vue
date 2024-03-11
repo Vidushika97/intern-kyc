@@ -91,7 +91,7 @@ export default {
       modalHeader: "Login",
       selectedCountryCode: "",
       mobileNumber: "",
-      // contactNumber: "",
+      contactNumber: "",
       showOtpModal:false,
     };
   },
@@ -133,12 +133,12 @@ export default {
       //     });
      
       // this.$router.push('/otp/');
-      this.myStore.mobile_number = contactNumber;
-      this.$router.push('/otp/'+contactNumber);
-      this.showOtpModal=true;
+      // this.myStore.mobile_number = contactNumber;
+      // this.$router.push('/otp/'+contactNumber);
+      // this.showOtpModal=true;
 
-      this.showModal=false;
-      this.setOtpModal();
+      // this.showModal=false;
+      this.setOtpModal(contactNumber);
     },
 
         handleKeyDown(event) {

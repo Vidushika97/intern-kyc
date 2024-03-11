@@ -216,8 +216,12 @@ export default {
         // }
       // });
     },
-    setOtpModal(){
+    setOtpModal(contactNumber){
+      this.myStore.mobile_number = contactNumber;
+      console.log(this.myStore.mobile_number);
+      console.log(contactNumber);
       this.showOtpModal=true;
+      this.showModal=false;
     },
 
     
