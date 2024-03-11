@@ -37,7 +37,7 @@ import {
     message: "This field may not be greater than 9 characters",
   });
 
-  extend("alpha_spaces,", {
+  extend("alpha_spaces", {
     ...alpha_spaces,
     message: "The Full Name field may only contain alphabetic characters as well as spaces",
   });

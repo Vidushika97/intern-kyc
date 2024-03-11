@@ -15,7 +15,7 @@
        <ValidationObserver v-slot="{ handleSubmit }">
            
         <div class="form-container"> 
-         <form @submit.prevent="">
+         <form @submit.prevent="handleSubmit(onSubmit)">
             <div class="columns is-8 is-mobile">
               <div class="column is-one-fifth">
                 <b-field>
@@ -36,7 +36,12 @@
                   <template #label>
                   Full Name <b style="color:red;">*</b>
                   </template>
-                  <ValidationProvider name="Full Name" rules="required|alpha_spaces" v-slot="{ errors }">
+                  <ValidationProvider name="Full Name" :rules="{
+                    required:true,
+                    alpha_spaces:true,
+                    }" 
+                    v-slot="{ errors }">
+
                     <b-input v-model="myStore.full_name"></b-input>
                     <span>{{ errors[0] }}</span>
                   </ValidationProvider>
@@ -98,7 +103,7 @@
               </div>
             </div>
             <div class="buttons">
-              <b-button id="back" @click="goBack"  :disabled="handleSubmit">Back</b-button>
+              <b-button id="back" @click="goBack" >Back</b-button>
              <input type="submit" id="continue" tect="Let's Continue" value="Let's Continue">
              </div>
           </form>
